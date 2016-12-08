@@ -50,7 +50,7 @@ hace referencia a la **github-octocat.png** (que puedes descargar de la esta [UR
   <html>
     <body>
       <br>Hello World!<br>
-      <img src="logo_utad.png">
+      <img src="github-octocat.png">
     </body>
   </html>
 ```
