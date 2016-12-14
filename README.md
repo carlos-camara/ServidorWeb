@@ -15,7 +15,7 @@ Servidor Web
 #### Introducción 
 
 Un servidor web no es más que un programa que implementa el lado servidor del protocolo
-HTTP. En esta práctica vamos a **implementar nuestro propio servidor web usando sockets
+HTTP. En esta práctica voy a **implementar mi propio servidor web usando sockets
 Java.**
 
 
@@ -23,9 +23,9 @@ Java.**
 
 El puerto por defecto de los servidores HTTP (esto es, el 80) no puede ser usando a no ser que
 ejecutes tu servidor Java como administrador (root en sistemas Linux o Mac). Para evitar este
-problema, vamos a implementar nuestro servidor web en el puerto **8080**.
-Nuestro servidor debe aceptar **peticiones concurrentes**. Por esta razón, un hilo (Thread)
-tiene que ser creado con cada petición recibida. Nuestro servidor sólo servirá archivos que
+problema, voy a implementar mi servidor web en el puerto **8080**.
+El servidor debe aceptar **peticiones concurrentes**. Por esta razón, un hilo (Thread)
+tiene que ser creado con cada petición recibida. El servidor sólo servirá archivos que
 estarán almacenados en la raíz de nuestro proyecto Eclipse. Como cliente HTTP vamos **a usar
 un navegador real** (Chrome, Firefox, etc).
 
