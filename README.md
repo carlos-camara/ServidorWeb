@@ -38,7 +38,7 @@ petición entrante, crea un hilo que atienda a la petición.
 Lo más cómodo de cara a la implementación es que la raíz de tu servidor sea la misma raíz
 de tu proyecto Java. Toma como ejemplo esta captura:
 
-![alt tag](https://github.com/Carl2100/ServidorWeb/blob/master/Imagenes/fotoProyecto.PNG)
+![alt tag](https://github.com/carlos-camara/ServidorWeb/blob/master/Imagenes/fotoProyecto.PNG)
 
 Observa que en la raíz de este proyecto ejemplo hay dos ficheros: **index.html** y
 **github-octocat.png**. Ambos ficheros (y otros más si los hubiese) deben ser visibles a través
@@ -57,7 +57,7 @@ hace referencia a la **github-octocat.png** (que puedes descargar de la esta [UR
 
 Una petición al fichero **index.html** desde un navegador generará esta petición HTTP:
 
-![alt tag](https://github.com/Carl2100/ServidorWeb/blob/master/Imagenes/peticion.PNG)
+![alt tag](https://github.com/carlos-camara/ServidorWeb/blob/master/Imagenes/peticion.PNG)
 
 Para esta petición, el servidor deberá leer el contenido del fichero (**index.html** en este
 caso) y escribir el contenido del fichero correspondiente en la respuesta HTTP.
@@ -78,17 +78,17 @@ tamañoRespuesta = fichero.length();
 En caso de hacer una petición a que no está disponible, el servidor deberá enviar la
 respuesta adecuada, esto es, **HTTP 404 Not Found**.
 
-![alt tag](https://github.com/Carl2100/ServidorWeb/blob/master/Imagenes/notFound.PNG)
+![alt tag](https://github.com/carlos-camara/ServidorWeb/blob/master/Imagenes/notFound.PNG)
 
 Puedes usar un navegador web para acceder a la URL **http://localhost:8080/index.html**. Si
 todo funciona correctamente deberías visualizar lo siguiente:
 
-![alt tag](https://github.com/Carl2100/ServidorWeb/blob/master/Imagenes/resultadoFinal.PNG)
+![alt tag](https://github.com/carlos-camara/ServidorWeb/blob/master/Imagenes/resultadoFinal.PNG)
 
 
 
 #### Uso 
 Clonar el repositorio ServidorWeb
- >$ git clone https://github.com/Carl2100/ServidorWeb.git
+ >$ git clone https://github.com/carlos-camara/ServidorWeb.git
  
 
