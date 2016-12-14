@@ -89,6 +89,6 @@ todo funciona correctamente deberías visualizar lo siguiente:
 
 #### Uso 
 Clonar el repositorio ServidorWeb
- >$ git clone https://github.com/CCGalindo/ServidorWeb.git
+ >$ git clone https://github.com/Carl2100/ServidorWeb.git
  
 
