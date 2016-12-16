@@ -11,7 +11,7 @@ public class servidor extends Thread {
 	private Socket socketParaGestionCliente;
 	private BufferedReader entrada;
 	private DataOutputStream salida;
-	private String metodo, nombreFichero, informacionPeticion, tipoFichero, ficheroError = "error.html";
+	private String metodo, nombreFichero, tipoFichero, ficheroError = "error.html";
 	private long tamañoRespuesta;
 	private byte[] contenido;
 	private File fichero;
@@ -31,8 +31,7 @@ public class servidor extends Thread {
 
 			// Mostrar los datos de la petición en el servidor
 			while (entrada.ready()) {
-				System.out.println(informacionPeticion);
-				informacionPeticion = entrada.readLine();
+				System.out.println(entrada.readLine());
 			}
 			System.out.println(" ");
 
@@ -72,11 +71,12 @@ public class servidor extends Thread {
 
 	public void gestionCabeceraPeticiones() {
 		try {
-			informacionPeticion = entrada.readLine();
+			String informacionPeticion = entrada.readLine();
 			StringTokenizer separador = new StringTokenizer(informacionPeticion);
 			metodo = separador.nextToken();
 			nombreFichero = separador.nextToken();
 			nombreFichero = nombreFichero.replaceFirst("/", "");
+			System.out.println(informacionPeticion);
 		} catch (IOException e) {
 			System.out.println("Problemas en la recepción de la petición");
 		}
