@@ -1,5 +1,4 @@
 
-
 import java.io.*;
 import java.net.*;
 import java.nio.file.Files;
@@ -9,12 +8,10 @@ import java.util.*;
 
 public class servidor extends Thread {
 
-	private Socket socketParaGestionCliente = null;
-	private BufferedReader entrada = null;
-	private DataOutputStream salida = null;
-	private StringTokenizer separador;
-	private String cabecera = " ", metodo = " ", nombreFichero = " ", protocolo = " ", informacionPeticion = " ",
-			tipoFichero = " ", respuestaError = "<b>NOT FOUND </b>";
+	private Socket socketParaGestionCliente;
+	private BufferedReader entrada;
+	private DataOutputStream salida;
+	private String metodo, nombreFichero, informacionPeticion, tipoFichero, ficheroError = "error.html";
 	private long tamañoRespuesta;
 	private byte[] contenido;
 	private File fichero;
@@ -29,6 +26,7 @@ public class servidor extends Thread {
 			entrada = new BufferedReader(new InputStreamReader(socketParaGestionCliente.getInputStream()));
 			salida = new DataOutputStream(socketParaGestionCliente.getOutputStream());
 
+			// Fragmentamos la información de la cabecera en varias variables
 			gestionCabeceraPeticiones();
 
 			// Mostrar los datos de la petición en el servidor
@@ -38,13 +36,11 @@ public class servidor extends Thread {
 			}
 			System.out.println(" ");
 
-			// Comprobar si el fichero existe y gestionar las peticiones en
-			// función de ello
-			fichero = new File(nombreFichero);
-			if (fichero.exists()) {
-				gestionRespuesta("HTTP/1.1 200 OK");
-			} else {
-				gestionRespuesta("HTTP/1.1 404 Not Found");
+			if (metodo.equals("GET")) {
+				fichero = new File(nombreFichero);
+				// Comprobamos la existencia del fichero para conocer el codigo
+				// de respuesta que deberemos enviar
+				gestionRespuesta((fichero.exists()) ? "HTTP/1.1 200 OK" : "HTTP/1.1 404 Not Found");
 			}
 
 		} catch (Exception e) {
@@ -54,53 +50,33 @@ public class servidor extends Thread {
 	}
 
 	public void gestionRespuesta(String codigo) throws Exception {
+		// Lectura de ficheros
+		leerFicheros((codigo.indexOf("200") > 0) ? nombreFichero : ficheroError);
 
-		// Leer fichero y enviar un fichero o mandar una respuesta si no lo
-		// encuentra
-		if (codigo.indexOf("200") > 0) {
-			leerFicheros(nombreFichero);
-		} else {
-			tamañoRespuesta = respuestaError.length();
-		}
-
-		// Envio de datos al cliente
-		salida.writeBytes(codigo);
-		salida.writeBytes("Content-Type: " + tipoFichero + "\r\n");
-		salida.writeBytes("Content-Length: " + String.valueOf(tamañoRespuesta) + "\r\n");
-		salida.writeBytes("Connection: close\r\n");
-		salida.writeBytes("\r\n");
-
-		if (codigo.indexOf("200") > 0) {
-			try {
-				for (int i = 0; i < contenido.length; i++) {
-					salida.write(contenido);
-				}
-			} catch (IOException e) {
-				// System.out.println("Problemas al leer el fichero");
-			}
-		} else {
-			salida.writeBytes(respuestaError);
-		}
+		// Envio de datos cabecera
+		salida.writeBytes(codigo + "Content-Type: " + tipoFichero + "\r\n" + "Content-Length: "
+				+ String.valueOf(tamañoRespuesta) + "\r\n" + "Connection: close\r\n" + "\r\n");
+		// Envio datos contenido fichero
+		salida.write(contenido);
 
 		salida.close();
 	}
 
-	public void leerFicheros(String nombreFichero) throws IOException {
-		Path path = Paths.get(nombreFichero);
+	public void leerFicheros(String nombre) throws IOException {
+		Path path = Paths.get(nombre);
 		tipoFichero = Files.probeContentType(path);
+		fichero = (nombre.equals(ficheroError)) ? new File(nombre) : fichero;
 		contenido = Files.readAllBytes(path);
 		tamañoRespuesta = fichero.length();
 	}
 
 	public void gestionCabeceraPeticiones() {
 		try {
-			cabecera = entrada.readLine();
-			separador = new StringTokenizer(cabecera);
+			informacionPeticion = entrada.readLine();
+			StringTokenizer separador = new StringTokenizer(informacionPeticion);
 			metodo = separador.nextToken();
 			nombreFichero = separador.nextToken();
 			nombreFichero = nombreFichero.replaceFirst("/", "");
-			protocolo = separador.nextToken();
-			informacionPeticion = cabecera;
 		} catch (IOException e) {
 			System.out.println("Problemas en la recepción de la petición");
 		}

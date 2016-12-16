@@ -1,5 +1,4 @@
 
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -12,7 +11,7 @@ public class main {
 		ServerSocket Server;
 		try {
 			Server = new ServerSocket(8080, 6, InetAddress.getByName("127.0.0.1"));
-			while (true) {
+			for (;;) {
 				Socket cliente = Server.accept();
 				servidor servidorGestorClientes = new servidor(cliente);
 				servidorGestorClientes.start();
