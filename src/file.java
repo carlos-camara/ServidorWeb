@@ -7,8 +7,14 @@ public class file {
 	private String fileType;
 
 	/**
-	 * -Function: Builder -Parameters: long fileSize:File size. String
-	 * fileType:File type. byte[] content:Content file.
+	 * Builder.
+	 * 
+	 * @param fileSize
+	 *            : File size.
+	 * @param fileType
+	 *            : File type.
+	 * @param content
+	 *            :Content file.
 	 **/
 	file(long fileSize, String fileType, byte[] content) {
 		this.responseSize = fileSize;

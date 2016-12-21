@@ -16,8 +16,12 @@ public class server {
 	protected int numberRequest;
 
 	/**
-	 * -Function: Builder -Parameters: int port: Port where the server will
-	 * listen. String host: Host where the server is located.
+	 * Builder.
+	 * 
+	 * @param port:
+	 *            Port where the server will listen.
+	 * @param host:
+	 *            Host where the server is located.
 	 **/
 	server(int port, String host) {
 		this.port = port;
@@ -26,7 +30,7 @@ public class server {
 		init();
 	}
 
-	/** Function: Start the server **/
+	/** Start the server. **/
 	private void init() {
 		try {
 			serverSocket = new ServerSocket(port, 6, InetAddress.getByName(host));
@@ -50,7 +54,7 @@ public class server {
 		}
 	}
 
-	/** Function: Files that are not used will be deleted **/
+	/** Files that are not used will be deleted. **/
 	synchronized private void cleanFilesCaches() {
 		Iterator<Map.Entry<String, file>> itr = filesCache.entrySet().iterator();
 		while (itr.hasNext()) {
