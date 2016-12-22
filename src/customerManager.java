@@ -113,7 +113,7 @@ public class customerManager extends Thread {
 			String informationRequest = input.readLine();
 			StringTokenizer tokenizer = new StringTokenizer(informationRequest);
 			method = tokenizer.nextToken();
-			// Removed the first position
+			// Removes the first position
 			filename = tokenizer.nextToken().replaceFirst("/", "");
 			System.out.println(informationRequest);
 		} catch (IOException e) {
