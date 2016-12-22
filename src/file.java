@@ -1,4 +1,7 @@
 
+/**
+ * Author: Carlos Cámara
+ */
 public class file {
 
 	private int appearances;
@@ -49,3 +52,4 @@ public class file {
 	}
 
 }
+
