@@ -1,4 +1,5 @@
 
+
 import java.io.*;
 import java.net.*;
 import java.nio.file.Files;
@@ -6,11 +7,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+/**
+ * Author: Carlos Cámara
+ */
+
 public class customerManager extends Thread {
 
 	private Socket customerManagerSocket;
-	private BufferedReader out;
-	private DataOutputStream input;
+	private BufferedReader input;
+	private DataOutputStream out;
 	private String method, filename, fileType, errorFile = "error.html";
 	private long responseSize;
 	private byte[] content;
@@ -23,19 +28,18 @@ public class customerManager extends Thread {
 	public void run() {
 		try {
 			// Receive and send data to the customer
-			out = new BufferedReader(new InputStreamReader(customerManagerSocket.getInputStream()));
-			input = new DataOutputStream(customerManagerSocket.getOutputStream());
+			input = new BufferedReader(new InputStreamReader(customerManagerSocket.getInputStream()));
+			out = new DataOutputStream(customerManagerSocket.getOutputStream());
 
 			// Fragments the information of the header
 			managementHeader();
 			// Show the information of the request to the server
-			while (out.ready()) {
-				System.out.println(out.readLine());
+			while (input.ready()) {
+				System.out.println(input.readLine());
 			}
 			System.out.println(" ");
 			if (method.equals("GET")) {
 				file = new File(filename);
-
 				if (server.filesCache.containsKey(filename)) {
 					managementResponse("HTTP/1.1 200 OK", false);
 				} else {
@@ -44,18 +48,21 @@ public class customerManager extends Thread {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("Communication problems with the client");
+			// System.out.println("Communication problems with the client");
 		}
 
 	}
 
 	/**
-	 * Function: Send the content of the header and the content of the file
-	 * -Parameters: String code:Let us know if the file exists. Boolean readFile
-	 * will help us to know if we have to read the file or not.
+	 * Send the content of the header and the content of the file
+	 * 
+	 * @param code
+	 *            :Let us know if the file exists.
+	 * @param readFile
+	 *            :will help us to know if we have to read the file or not.
 	 */
 	private void managementResponse(String code, boolean readFile) throws Exception {
-		// If you don�t need to read the file
+		// If you don´t need to read the file
 		if (!readFile) {
 			fileType = server.filesCache.get(filename).getFileType();
 			server.filesCache.get(filename).setAppearances(server.filesCache.get(filename).getAppearances() + 1);
@@ -68,15 +75,18 @@ public class customerManager extends Thread {
 		}
 
 		// Sending data header
-		input.writeBytes(code + "Content-Type: " + fileType + "\r\n" + "Content-Length: " + String.valueOf(responseSize)
+		out.writeBytes(code + "Content-Type: " + fileType + "\r\n" + "Content-Length: " + String.valueOf(responseSize)
 				+ "\r\n" + "Connection: close\r\n" + "\r\n");
 		// Sending data content
-		input.write(content);
-		input.close();
+		out.write(content);
+		out.close();
 	}
 
 	/**
-	 * Function: Read files -Parameters: String name:filename.
+	 * Read files
+	 * 
+	 * @param name
+	 *            : Name of the file to be read.
 	 */
 	private void readFiles(String name) {
 		Path path = Paths.get(name);
@@ -95,12 +105,12 @@ public class customerManager extends Thread {
 	}
 
 	/**
-	 * Function: Manage the header of the request.
+	 * Manage the header of the request.
 	 */
 	private void managementHeader() {
 		try {
 			// Stores the header information of the request
-			String informationRequest = out.readLine();
+			String informationRequest = input.readLine();
 			StringTokenizer tokenizer = new StringTokenizer(informationRequest);
 			method = tokenizer.nextToken();
 			// Removed the first position
