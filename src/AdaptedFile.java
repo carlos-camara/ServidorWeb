@@ -1,5 +1,7 @@
-
-public class file {
+/**
+ * Author: Carlos Cámara
+ */
+public class AdaptedFile {
 
 	private int appearances;
 	private byte[] content;
@@ -16,7 +18,7 @@ public class file {
 	 * @param content
 	 *            :Content file.
 	 **/
-	file(long fileSize, String fileType, byte[] content) {
+	AdaptedFile(long fileSize, String fileType, byte[] content) {
 		this.responseSize = fileSize;
 		this.fileType = fileType;
 		this.appearances = 1;
