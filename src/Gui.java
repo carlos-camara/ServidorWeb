@@ -1,17 +1,18 @@
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -27,14 +28,17 @@ public class Gui implements ActionListener {
 	private JTextField textFieldHost, textFieldPort;
 	private JFrame frame;
 	private JButton btnConnect, btnDisconnect;
-	private ButtonGroup group;
 	private JTextArea display;
-	
+	private JLabel lblonline;
+	private Server server;
 
 	public Gui() {
 		initUI();
 	}
 
+	/**
+	 * Create the gui of the app
+	 */
 	void initUI() {
 		// LookAndFeel
 		try {
@@ -53,14 +57,19 @@ public class Gui implements ActionListener {
 		frame = new JFrame();
 		frame.setTitle("OTH Control Panel");
 		frame.getContentPane().setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-		frame.setBounds(200, 200, 500, 400);
+		frame.setBounds(200, 200, 400, 400);
+		// This line will center the window on the screen
+		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new GridLayout(0, 2, 0, 0));
+		// The ImageIcon is used to create the icon
+		ImageIcon webIcon = new ImageIcon("github-octocat.png");
+		frame.setIconImage(webIcon.getImage());
+		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 
 		// JPanel interaction is inside the JFrame
 		JPanel interaction = new JPanel();
 		frame.getContentPane().add(interaction);
-		interaction.setLayout(new BoxLayout(interaction, BoxLayout.Y_AXIS));
+		interaction.setLayout(new BoxLayout(interaction, BoxLayout.X_AXIS));
 
 		// JPanel panelHost is inside the interaction Jpanel
 		JPanel panelHost = new JPanel();
@@ -79,8 +88,6 @@ public class Gui implements ActionListener {
 		// JPanel panelPort is inside the interaction Jpanel
 		JPanel panelPort = new JPanel();
 		interaction.add(panelPort);
-		// To make space
-		panelPort.add(Box.createRigidArea(new Dimension(26, 0)));
 		JLabel laberPort = new JLabel("Port:");
 		panelPort.add(laberPort);
 
@@ -88,42 +95,6 @@ public class Gui implements ActionListener {
 		textFieldPort.setText("8080");
 		panelPort.add(textFieldPort);
 		textFieldPort.setColumns(10);
-
-		// JPanel panelchoice is inside the interaction Jpanel
-		JPanel panelchoice = new JPanel();
-		interaction.add(panelchoice);
-
-		JRadioButton JRadioButtonHost = new JRadioButton("Host");
-		JRadioButtonHost.setActionCommand("Host");
-		JRadioButtonHost.setSelected(true);
-		panelchoice.add(JRadioButtonHost);
-
-		panelchoice.add(Box.createRigidArea(new Dimension(10, 0)));
-
-		JRadioButton JRadioButtonGuest = new JRadioButton("Guest");
-		JRadioButtonGuest.setActionCommand("Guest");
-		panelchoice.add(JRadioButtonGuest);
-
-		// Group the radio buttons.
-		group = new ButtonGroup();
-		group.add(JRadioButtonHost);
-		group.add(JRadioButtonGuest);
-
-		// JPanel panelConnect is inside the interaction Jpanel
-		JPanel panelConnect = new JPanel();
-		interaction.add(panelConnect);
-
-		btnConnect = new JButton("Connect");
-		btnConnect.addActionListener(this);
-		panelConnect.add(btnConnect);
-
-		btnDisconnect = new JButton("Disconnect");
-		btnDisconnect.addActionListener(this);
-		panelConnect.add(btnDisconnect);
-
-		// JLabel lblonline is inside the interaction Jpanel
-		JLabel lblonline = new JLabel("offline");
-		interaction.add(lblonline);
 
 		// JPanel Receiver is inside the JFrame
 		JPanel Receiver = new JPanel();
@@ -136,36 +107,64 @@ public class Gui implements ActionListener {
 		Receiver.add(panelAreaText);
 		panelAreaText.setLayout(new BoxLayout(panelAreaText, BoxLayout.X_AXIS));
 
-		 display = new JTextArea(16, 58);
+		panelAreaText.add(Box.createRigidArea(new Dimension(10, 0)));
+		display = new JTextArea(16, 58);
 		display.setEditable(false); // set textArea non-editable
 		JScrollPane scroll = new JScrollPane(display);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		panelAreaText.add(scroll);
-		panelAreaText.add(Box.createRigidArea(new Dimension(5, 0)));
+		panelAreaText.add(Box.createRigidArea(new Dimension(10, 0)));
 		Receiver.add(Box.createRigidArea(new Dimension(0, 16)));
 
+		// JPanel panelConnect is inside the interaction Jpanel
+		JPanel panelConnect = new JPanel();
+		Receiver.add(panelConnect);
+
+		btnConnect = new JButton("Connect");
+		btnConnect.addActionListener(this);
+		panelConnect.add(btnConnect);
+
+		btnDisconnect = new JButton("Disconnect");
+		btnDisconnect.addActionListener(this);
+		panelConnect.add(btnDisconnect);
+		// JPanel panelLabelConnection is inside the interaction Jpanel
+		JPanel panelLabelConnection = new JPanel();
+		Receiver.add(panelLabelConnection);
+		panelLabelConnection.setLayout(new BoxLayout(panelLabelConnection, BoxLayout.X_AXIS));
+
+		Component rigidArea = Box.createRigidArea(new Dimension(340, 0));
+		panelLabelConnection.add(rigidArea);
+
+		// JLabel lblonline is inside the interaction Jpanel
+		lblonline = new JLabel("Offline");
+		panelLabelConnection.add(lblonline);
+		lblonline.setForeground(Color.red);
+
+		// Put the frame visible
 		frame.setVisible(true);
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnConnect && group.getSelection().getActionCommand().equals("Host")) {
-			Server server = new Server(
-					(textFieldPort.getText().equals("")) ? Integer.parseInt(textFieldPort.getText()) : 8080,
-					(textFieldPort.getText().equals("")) ? textFieldHost.getText() : "localhost",this);
+		if (e.getSource() == btnConnect) {
+			String auxiliaryHost = (textFieldPort.getText().equals("")) ? textFieldHost.getText() : "localhost";
+			display.append("Starting server in " + auxiliaryHost + "\n\n");
+			// Start the server
+			server = new Server((textFieldPort.getText().equals("")) ? Integer.parseInt(textFieldPort.getText()) : 8080,
+					auxiliaryHost, this);
 			server.start();
-		
-		} else if (e.getSource() == btnConnect && group.getSelection().getActionCommand().equals("Host")) {
-			System.out.println("Modo guest");
+			lblonline.setText("Online");
+			lblonline.setForeground(Color.green);
 		} else {
-			// Close the app
-			System.exit(0);
+			lblonline.setText("Offline");
+			lblonline.setForeground(Color.RED);
+			display.setText("");
+			server.interrupt();
 		}
 	}
 
 	public JTextArea getDisplay() {
 		return display;
 	}
-	
-	
+
 }

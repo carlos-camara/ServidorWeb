@@ -1,9 +1,10 @@
-
-public class main {
+/**
+ * Author: Carlos Cámara
+ */
+public class Main {
 
 	public static void main(String[] args) {
-		// start the server in the port 8080 and in localhost
-		server server = new server(8080, "127.0.0.1");
+		Gui gui = new Gui();
 	}
 
 }
